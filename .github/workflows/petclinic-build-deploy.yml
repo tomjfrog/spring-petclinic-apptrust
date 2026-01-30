@@ -41,9 +41,10 @@ jobs:
 
       - name: Inject JFrog CLI
         id: jfrog-cli
-        uses: jfrog/setup-jfrog-cli@v4
+        uses: jfrog/setup-jfrog-cli@v4.9.1
         env:
           JFROG_CLI_AVOID_NEW_VERSION_WARNING: true
+          JFROG_CLI_LOG_LEVEL: DEBUG
       
       - name: Build and test (Maven)
         run: ./mvnw -B -ntp verify -DskipTests=true
