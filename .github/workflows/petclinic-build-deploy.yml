@@ -95,3 +95,9 @@ jobs:
             -Ddocker.publishRegistry.url=tomjfrog.jfrog.io \
             -Ddocker.publishRegistry.username="${JFROG_DOCKER_USERNAME}" \
             -Ddocker.publishRegistry.password="${{ steps.jfrog-cli.outputs.oidc-token }}"
+
+      - name: Generate Image Details File
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && env.JFROG_DOCKER_USERNAME != '' && steps.jfrog-cli.outputs.oidc-token != '' }}
+        run: |
+          IMAGE="tomjfrog.jfrog.io/pcm-petclinic-docker-dev-local/petclinic:${{ steps.version.outputs.version }}"
+          docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE" > image-file-details
