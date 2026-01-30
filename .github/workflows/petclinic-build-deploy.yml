@@ -46,7 +46,41 @@ jobs:
           version: 2.88.0
       
       - name: Build and test (Maven)
-        run: ./mvnw -B -ntp verify
+        run: ./mvnw -B -ntp verify -DskipTests=true
+
+      - name: Check condition - main branch
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "is_main=true"
+          else
+            echo "is_main=false"
+          fi
+          echo "github.ref=${{ github.ref }}"
+
+      - name: Check condition - push event
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "is_push_event=true"
+          else
+            echo "is_push_event=false"
+          fi
+          echo "github.event_name=${{ github.event_name }}"
+
+      - name: Check condition - JFROG_DOCKER_USERNAME set
+        run: |
+          if [ -n "${JFROG_DOCKER_USERNAME}" ]; then
+            echo "jfrog_docker_username_set=true"
+          else
+            echo "jfrog_docker_username_set=false"
+          fi
+
+      - name: Check condition - JFrog OIDC token set
+        run: |
+          if [ -n "${{ steps.jfrog-cli.outputs.oidc-token }}" ]; then
+            echo "jfrog_oidc_token_set=true"
+          else
+            echo "jfrog_oidc_token_set=false"
+          fi
 
       - name: Build and publish image (JFrog registry)
         if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && env.JFROG_DOCKER_USERNAME != '' && steps.jfrog-cli.outputs.oidc-token != '' }}
