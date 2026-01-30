@@ -106,7 +106,7 @@ jobs:
       - name: Create Build Info from Docker Image
         if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && env.JFROG_DOCKER_USERNAME != '' && steps.jfrog-cli.outputs.oidc-token != '' }}
         run: |
-          jf build-docker-create \
+          jf rt build-docker-create \
           --build-name=pcm-petclinic-docker-dev-local \
           --build-number=${{ github.run_number }} \
           --image-file image-file-details \
