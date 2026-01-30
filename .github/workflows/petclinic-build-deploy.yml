@@ -107,7 +107,9 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && env.JFROG_DOCKER_USERNAME != '' && steps.jfrog-cli.outputs.oidc-token != '' }}
         run: |
           jf rt build-docker-create \
+          pcm-petclinic-docker-dev-local:${{ steps.version.outputs.version }} \
           --build-name=pcm-petclinic-docker-dev-local \
           --build-number=${{ github.run_number }} \
           --image-file image-file-details \
-          pcm-petclinic-docker-dev-local:${{ steps.version.outputs.version }}
+          --project=${{ env.JF_PROJECT }}
+          
