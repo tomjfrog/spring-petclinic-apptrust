@@ -101,3 +101,4 @@ jobs:
         run: |
           IMAGE="tomjfrog.jfrog.io/pcm-petclinic-docker-dev-local/petclinic:${{ steps.version.outputs.version }}"
           docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE" > image-file-details
+          cat image-file-details
