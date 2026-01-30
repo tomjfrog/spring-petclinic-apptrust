@@ -49,7 +49,6 @@ jobs:
         run: ./mvnw -B -ntp verify
 
       - name: Build and publish image (JFrog registry)
-        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && env.JFROG_DOCKER_USERNAME != '' && env.JFROG_DOCKER_PASSWORD != '' }}
         run: |
           ./mvnw -B -ntp spring-boot:build-image \
             -Dspring-boot.build-image.imageName=tomjfrog.jfrog.io/petclinic-docker-dev-local/petclinic:${{ steps.version.outputs.version }} \
