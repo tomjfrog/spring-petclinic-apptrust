@@ -38,21 +38,22 @@ jobs:
       - name: Resolve project version
         id: version
         run: echo "version=$(./mvnw -q -DforceStdout help:evaluate -Dexpression=project.version)" >> "$GITHUB_OUTPUT"  
-      
+
       - name: Inject JFrog CLI
         id: jfrog-cli
         uses: jfrog/setup-jfrog-cli@v4
         with:
           version: 2.88.0
-
+      
       - name: Build and test (Maven)
         run: ./mvnw -B -ntp verify
 
       - name: Build and publish image (JFrog registry)
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && env.JFROG_DOCKER_USERNAME != '' && steps.jfrog-cli.outputs.oidc-token != '' }}
         run: |
           ./mvnw -B -ntp spring-boot:build-image \
             -Dspring-boot.build-image.imageName=tomjfrog.jfrog.io/petclinic-docker-dev-local/petclinic:${{ steps.version.outputs.version }} \
             -Dspring-boot.build-image.publish=true \
             -Ddocker.publishRegistry.url=tomjfrog.jfrog.io \
-            -Ddocker.publishRegistry.username="${{ secrets.JFROG_DOCKER_USERNAME }}" \
+            -Ddocker.publishRegistry.username="${JFROG_DOCKER_USERNAME}" \
             -Ddocker.publishRegistry.password="${{ steps.jfrog-cli.outputs.oidc-token }}"
