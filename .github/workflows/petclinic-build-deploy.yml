@@ -110,4 +110,4 @@ jobs:
           --build-name=pcm-petclinic-docker-dev-local \
           --build-number=${{ github.run_number }} \
           --image-file image-file-details \
-          pcm-petclinic-docker-dev-local
+          pcm-petclinic-docker-dev-local:${{ steps.version.outputs.version }}
