@@ -42,6 +42,8 @@ jobs:
       - name: Inject JFrog CLI
         id: jfrog-cli
         uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JFROG_CLI_AVOID_NEW_VERSION_WARNING: true
         with:
           version: 2.88.0
       
