@@ -102,3 +102,12 @@ jobs:
           IMAGE="tomjfrog.jfrog.io/pcm-petclinic-docker-dev-local/petclinic:${{ steps.version.outputs.version }}"
           docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE" > image-file-details
           cat image-file-details
+      
+      - name: Create Build Info from Docker Image
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' && env.JFROG_DOCKER_USERNAME != '' && steps.jfrog-cli.outputs.oidc-token != '' }}
+        run: |
+          jf build-docker-create \
+          --build-name=pcm-petclinic-docker-dev-local \
+          --build-number=${{ github.run_number }} \
+          --image-file image-file-details \
+          pcm-petclinic-docker-dev-local
