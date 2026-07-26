@@ -47,7 +47,6 @@ jobs:
           JFROG_CLI_LOG_LEVEL: DEBUG
         with:
           oidc-provider-name: github-oidc-integration
-          oidc-audience: jfrog-github
       
       - name: Build and test (Maven)
         run: ./mvnw -B -ntp verify -DskipTests=true
